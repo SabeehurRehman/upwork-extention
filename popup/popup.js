@@ -4,52 +4,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load defaults module
-  const Defaults = {
-    version: 1,
-    enabled: true,
-    hardFilters: {
-      requirePaymentVerified: true,
-      minHireRate: 30,
-      minBudget: 0
-    },
-    scoring: {
-      hireRate: 25,
-      paymentVerified: 20,
-      clientSpend: 15,
-      proposalCount: 15,
-      budget: 15,
-      keywordMatch: 10
-    },
-    keywords: {
-      required: [],
-      preferred: [],
-      excluded: []
-    },
-    ui: {
-      showScoreBadge: true,
-      showBorderHighlight: true,
-      showTooltip: true,
-      colorScheme: {
-        high: '#22c55e',
-        medium: '#eab308',
-        low: '#ef4444'
-      }
-    },
-    presets: {
-      freelancer: {
-        minHireRate: 50,
-        minBudget: 100,
-        requirePaymentVerified: true
-      },
-      agency: {
-        minHireRate: 30,
-        minBudget: 500,
-        requirePaymentVerified: true
-      }
-    }
-  };
-  
   // Get DOM elements
   const enableToggle = document.getElementById('enableToggle');
   const statusText = document.getElementById('statusText');
@@ -73,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadConfig() {
     return new Promise((resolve) => {
       chrome.storage.local.get(['config'], (result) => {
-        if (result.config && result.config.version === Defaults.version) {
+        if (result.config && result.config.version === 1) {
           resolve(result.config);
         } else {
           resolve(getDefaults());
@@ -87,22 +41,48 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   function getDefaults() {
     return {
-      version: Defaults.version,
-      enabled: Defaults.enabled,
-      hardFilters: { ...Defaults.hardFilters },
-      scoring: { ...Defaults.scoring },
+      version: 1,
+      enabled: true,
+      hardFilters: {
+        requirePaymentVerified: true,
+        minHireRate: 30,
+        minBudget: 0
+      },
+      scoring: {
+        hireRate: 25,
+        paymentVerified: 20,
+        clientSpend: 15,
+        proposalCount: 15,
+        budget: 15,
+        keywordMatch: 10
+      },
       keywords: {
-        required: [...Defaults.keywords.required],
-        preferred: [...Defaults.keywords.preferred],
-        excluded: [...Defaults.keywords.excluded]
+        required: [],
+        preferred: [],
+        excluded: []
       },
       ui: {
-        showScoreBadge: Defaults.ui.showScoreBadge,
-        showBorderHighlight: Defaults.ui.showBorderHighlight,
-        showTooltip: Defaults.ui.showTooltip,
-        colorScheme: { ...Defaults.ui.colorScheme }
+        showScoreBadge: true,
+        showBorderHighlight: true,
+        showTooltip: true,
+        colorScheme: {
+          high: '#22c55e',
+          medium: '#eab308',
+          low: '#ef4444'
+        }
       },
-      presets: JSON.parse(JSON.stringify(Defaults.presets))
+      presets: {
+        freelancer: {
+          minHireRate: 50,
+          minBudget: 100,
+          requirePaymentVerified: true
+        },
+        agency: {
+          minHireRate: 30,
+          minBudget: 500,
+          requirePaymentVerified: true
+        }
+      }
     };
   }
   
@@ -128,15 +108,16 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Get configuration from form
    */
   function getFormConfig() {
+    const defaults = getDefaults();
     return {
-      version: Defaults.version,
+      version: 1,
       enabled: enableToggle.checked,
       hardFilters: {
         requirePaymentVerified: requirePaymentVerified.checked,
         minHireRate: parseInt(minHireRate.value) || 0,
         minBudget: parseInt(minBudget.value) || 0
       },
-      scoring: Defaults.scoring,
+      scoring: defaults.scoring,
       keywords: {
         required: [],
         preferred: preferredKeywords.value
@@ -152,9 +133,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         showScoreBadge: showScoreBadge.checked,
         showBorderHighlight: showBorderHighlight.checked,
         showTooltip: showTooltip.checked,
-        colorScheme: Defaults.ui.colorScheme
+        colorScheme: defaults.ui.colorScheme
       },
-      presets: Defaults.presets
+      presets: defaults.presets
     };
   }
   
@@ -191,7 +172,8 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Apply preset
    */
   function applyPreset(presetName) {
-    const preset = Defaults.presets[presetName];
+    const defaults = getDefaults();
+    const preset = defaults.presets[presetName];
     if (!preset) return;
     
     requirePaymentVerified.checked = preset.requirePaymentVerified;

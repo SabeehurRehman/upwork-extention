@@ -91,7 +91,12 @@ const Defaults = {
     return new Promise((resolve) => {
       if (typeof chrome !== 'undefined' && chrome.storage) {
         chrome.storage.local.set({ config }, () => {
-          Logger.info('Configuration saved');
+          // Logger may not be available in all contexts
+          if (typeof Logger !== 'undefined') {
+            Logger.info('Configuration saved');
+          } else {
+            console.log('[Upwork Shortlister] Configuration saved');
+          }
           resolve();
         });
       } else {

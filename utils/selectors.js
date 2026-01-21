@@ -48,7 +48,7 @@ const Selectors = {
   
   // Posted time selectors
   postedTime: [
-    '[data-test="job-pubilshed-date"]',
+    '[data-test="job-published-date"]',
     'small[data-test="job-posted-date"]',
     'span.text-muted small'
   ],
