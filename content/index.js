@@ -6,6 +6,23 @@
 (async function() {
   'use strict';
   
+  // Inject CSS styles to ensure visibility
+  const style = document.createElement('style');
+  style.textContent = `
+    .upwork-shortlister-badge {
+      position: absolute !important;
+      z-index: 10000 !important;
+      pointer-events: auto !important;
+    }
+    
+    [data-shortlister-id] {
+      position: relative !important;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Log extension load with clear marker
+  console.log('%c[Upwork Shortlister] 🎯 Extension Loading...', 'background: #667eea; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
   Logger.info('Upwork Smart Job Shortlister initializing...');
   
   // Extension state
@@ -22,12 +39,16 @@
       config = await Defaults.getConfig();
       isEnabled = config.enabled;
       
+      console.log('%c[Upwork Shortlister] ⚙️ Configuration loaded', 'color: #22c55e; font-weight: bold;', config);
       Logger.info('Configuration loaded:', config);
       
       if (!isEnabled) {
+        console.log('%c[Upwork Shortlister] ⏸️ Extension is disabled', 'color: #f59e0b; font-weight: bold;');
         Logger.info('Extension is disabled');
         return;
       }
+      
+      console.log('%c[Upwork Shortlister] ✅ Starting job processing...', 'color: #22c55e; font-weight: bold;');
       
       // Start processing jobs
       startProcessing();
@@ -43,6 +64,7 @@
       }
       
     } catch (error) {
+      console.error('%c[Upwork Shortlister] ❌ Initialization failed', 'color: #ef4444; font-weight: bold;', error);
       Logger.error('Initialization failed:', error);
     }
   }
@@ -51,11 +73,15 @@
    * Start processing job cards
    */
   function startProcessing() {
+    // Log current page URL to confirm we're on the right page
+    console.log('%c[Upwork Shortlister] 📍 Current URL:', 'color: #3b82f6;', window.location.href);
+    
     // Start observing for new cards
     Observer.start((card) => {
       processJobCard(card);
     });
     
+    console.log('%c[Upwork Shortlister] 👀 Watching for job cards...', 'color: #3b82f6; font-weight: bold;');
     Logger.info('Job processing started');
   }
   
@@ -154,6 +180,7 @@
   // Initialize the extension
   initialize();
   
+  console.log('%c[Upwork Shortlister] 🚀 Extension loaded successfully!', 'background: #22c55e; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
   Logger.info('Upwork Smart Job Shortlister loaded successfully');
   
 })();

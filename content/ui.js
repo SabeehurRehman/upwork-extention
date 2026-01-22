@@ -31,6 +31,8 @@ const UI = {
     const score = result.score;
     const color = Scorer.getScoreColor(score, config.ui.colorScheme);
     
+    console.log(`%c[UI] 🎯 Annotating card with score: ${score}`, 'color: #8b5cf6; font-weight: bold;');
+    
     // Add border highlight
     if (config.ui.showBorderHighlight) {
       this.addBorderHighlight(card, color);
@@ -99,8 +101,9 @@ const UI = {
    * @param {string} color - Border color
    */
   addBorderHighlight: function(card, color) {
-    card.style.border = `3px solid ${color}`;
-    card.style.boxShadow = `0 0 10px ${color}40`;
+    card.style.border = `3px solid ${color} !important`;
+    card.style.boxShadow = `0 0 10px ${color}40 !important`;
+    console.log(`%c[UI] 🖼️ Added border: ${color}`, 'color: #8b5cf6;');
   },
   
   /**
@@ -114,31 +117,34 @@ const UI = {
     badge.className = 'upwork-shortlister-badge';
     badge.textContent = score;
     badge.style.cssText = `
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: ${color};
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      padding: 8px 12px;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      z-index: 1000;
-      min-width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: help;
+      position: absolute !important;
+      top: 10px !important;
+      right: 10px !important;
+      background: ${color} !important;
+      color: white !important;
+      font-weight: bold !important;
+      font-size: 18px !important;
+      padding: 8px 12px !important;
+      border-radius: 50% !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+      z-index: 10000 !important;
+      min-width: 40px !important;
+      height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: help !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     `;
     
     // Make card position relative if not already
-    if (getComputedStyle(card).position === 'static') {
+    const cardPosition = getComputedStyle(card).position;
+    if (cardPosition === 'static' || !cardPosition) {
       card.style.position = 'relative';
     }
     
     card.appendChild(badge);
+    console.log(`%c[UI] 🎨 Added score badge: ${score}`, 'color: #8b5cf6;');
   },
   
   /**

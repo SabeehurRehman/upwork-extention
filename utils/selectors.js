@@ -5,30 +5,43 @@
 
 const Selectors = {
   // Job card selectors (multiple fallbacks)
+  // Updated for current Upwork DOM structure
   jobCard: [
-    'article[data-test="job-tile-list"]',
+    'article[data-test="job-tile"]',
     'section[data-test="JobTile"]',
-    '[data-ev-label="search_result_impression"]',
+    'article[data-ev-label="search_result_impression"]',
+    '[data-test="JobTile"]',
     'article.job-tile',
-    'section.job-tile'
+    'section.job-tile',
+    'article.up-card-section',
+    '.air3-card',
+    'section.air3-card'
   ],
   
   // Job title selectors
   jobTitle: [
+    '[data-test="UpCJobTitle"]',
     '[data-test="job-tile-title"]',
     'h2.job-tile-title',
     'h3[itemprop="title"]',
+    'h4.job-tile-title',
     '.up-card-section h4',
-    'a.job-title-link'
+    'a.job-title-link',
+    'a[data-test="job-tile-title-link"]',
+    '.job-title a',
+    'h4 a'
   ],
   
   // Job description selectors
   jobDescription: [
+    '[data-test="UpCLineClamp JobDescription"]',
     '[data-test="job-description-text"]',
     '.job-description',
     '[data-test="Description"]',
     '.break',
-    'p[data-test="job-tile-description"]'
+    'p[data-test="job-tile-description"]',
+    '.air3-line-clamp',
+    'span[data-test="job-description"]'
   ],
   
   // Budget/rate selectors

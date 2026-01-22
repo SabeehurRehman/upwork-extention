@@ -102,12 +102,15 @@ const Observer = {
   findAllJobCards: function() {
     const cards = [];
     
+    console.log('%c[Observer] 🔍 Searching for job cards...', 'color: #8b5cf6;');
+    
     // Try each selector
     for (const selector of Selectors.jobCard) {
       try {
         const found = document.querySelectorAll(selector);
         if (found.length > 0) {
           cards.push(...Array.from(found));
+          console.log(`%c[Observer] ✓ Found ${found.length} cards with: ${selector}`, 'color: #22c55e;');
           Logger.debug(`Found ${found.length} cards with selector: ${selector}`);
         }
       } catch (e) {
@@ -115,8 +118,13 @@ const Observer = {
       }
     }
     
+    if (cards.length === 0) {
+      console.log('%c[Observer] ⚠️ No job cards found! Selectors may need updating.', 'color: #f59e0b; font-weight: bold;');
+    }
+    
     // Remove duplicates
     const uniqueCards = Array.from(new Set(cards));
+    console.log(`%c[Observer] 📊 Total unique cards: ${uniqueCards.length}`, 'color: #3b82f6; font-weight: bold;');
     Logger.debug(`Total unique cards: ${uniqueCards.length}`);
     
     return uniqueCards;
@@ -145,6 +153,7 @@ const Observer = {
     }
     
     if (newCount > 0) {
+      console.log(`%c[Observer] ✨ Processed ${newCount} new job cards`, 'color: #22c55e; font-weight: bold;');
       Logger.info(`Processed ${newCount} new job cards`);
     }
   },
