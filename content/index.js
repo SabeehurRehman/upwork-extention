@@ -113,12 +113,26 @@
       }
       
       processedJobs.add(job.id);
+      
+      // Log job info with missing field indicators
+      const missingFields = [];
+      if (job.budget === null && job.hourlyRange === null) missingFields.push('budget/rate');
+      if (job.proposals === null) missingFields.push('proposals');
+      if (job.client.hireRate === null) missingFields.push('hire rate');
+      if (job.client.totalSpent === null) missingFields.push('client spend');
+      
+      const missingInfo = missingFields.length > 0 
+        ? ` (missing: ${missingFields.join(', ')})` 
+        : '';
+      
+      console.log(`%c[Job] 📋 Processing: ${job.title}${missingInfo}`, 'color: #3b82f6;');
       Logger.debug('Processing job:', job.id, job.title);
       
       // Apply hard filters
       const filterResult = Rules.applyHardFilters(job, config);
       
       if (!filterResult.passed) {
+        console.log(`%c[Job] ❌ Rejected: ${filterResult.reason}`, 'color: #f59e0b;');
         Logger.debug(`Job rejected: ${filterResult.reason}`);
         UI.markRejected(card, filterResult.reason, config);
         return;
@@ -126,6 +140,7 @@
       
       // Calculate score
       const scoringResult = Scorer.calculateScore(job, config);
+      console.log(`%c[Job] ⭐ Score: ${scoringResult.score}/100`, `color: ${Scorer.getScoreColor(scoringResult.score, config.ui.colorScheme)}; font-weight: bold;`);
       Logger.debug('Job scored:', scoringResult.score, scoringResult);
       
       // Annotate the card
@@ -133,6 +148,7 @@
       
     } catch (error) {
       Logger.error('Error processing job card:', error);
+      console.error('%c[Job] ❌ Processing error:', 'color: #ef4444;', error);
       // Don't throw - continue processing other cards
     }
   }
