@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Node modules (if any build tools are added later)
+node_modules/
+
+# Build artifacts (if any)
+dist/
+build/
+
+# Package files
+*.zip
+*.crx
+*.pem
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Test files (for manual testing only)
+test/
